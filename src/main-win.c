@@ -1004,7 +1004,7 @@ static void fm_main_win_init(FmMainWin *win)
     /* status bar column showing volume free space */
     gtk_widget_style_get(GTK_WIDGET(win->statusbar), "shadow-type", &shadow_type, NULL);
     win->vol_status = (GtkFrame*)gtk_frame_new(NULL);
-    gtk_frame_set_shadow_type(win->vol_status, shadow_type);
+    gtk_frame_set_shadow_type(win->vol_status, GTK_SHADOW_NONE);
     gtk_box_pack_start(GTK_BOX(win->statusbar), GTK_WIDGET(win->vol_status), FALSE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(win->vol_status), gtk_label_new(NULL));
 
