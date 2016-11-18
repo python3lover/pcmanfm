@@ -24,6 +24,8 @@
 #include <config.h>
 #endif
 
+#include <stdlib.h>
+
 #include "desktop.h"
 #include "pcmanfm.h"
 
@@ -5539,6 +5541,9 @@ void fm_desktop_preference(GtkAction *act, FmDesktop *desktop)
     if (desktop == NULL)
         return;
 
+    system ("pipanel &");
+    return;
+
     if(!desktop_pref_dlg)
     {
         GtkBuilder* builder;
@@ -5684,6 +5689,36 @@ void fm_desktop_reconfigure (GtkAction *act, FmDesktop *desktop)
         pango_font_description_free(font_desc);
     }
     
+    // update icons
+    if (desktop->model)
+    {
+		if (documents && documents->fi)
+		{
+			if (desktop->conf.show_documents)
+				fm_folder_model_extra_file_add(desktop->model, documents->fi, FM_FOLDER_MODEL_ITEMPOS_PRE);
+			else
+				fm_folder_model_extra_file_remove(desktop->model, documents->fi);
+		}
+
+		if (trash_can && trash_can->fi)
+		{
+			if (desktop->conf.show_trash)
+				fm_folder_model_extra_file_add(desktop->model, trash_can->fi, FM_FOLDER_MODEL_ITEMPOS_PRE);
+			else
+				fm_folder_model_extra_file_remove(desktop->model, trash_can->fi);
+		}
+
+		GSList *msl;
+		for (msl = mounts; msl; msl = msl->next)
+		{
+			FmDesktopExtraItem *mount = msl->data;
+			if (desktop->conf.show_mounts)
+				fm_folder_model_extra_file_add(desktop->model, mount->fi, FM_FOLDER_MODEL_ITEMPOS_POST);
+			else
+				fm_folder_model_extra_file_remove(desktop->model, mount->fi);
+		}
+	}
+
     // update the desktop background
 	update_background(desktop, 0);
 }
