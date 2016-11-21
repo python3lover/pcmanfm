@@ -5541,8 +5541,14 @@ void fm_desktop_preference(GtkAction *act, FmDesktop *desktop)
     if (desktop == NULL)
         return;
 
-    system ("pipanel &");
-    return;
+    // if an override preference app is set, launch it...
+    if (desktop->conf.prefs_app)
+    {
+        char buffer[128];
+        sprintf (buffer, "%s &", desktop->conf.prefs_app);
+        system (buffer);
+        return;
+    }
 
     if(!desktop_pref_dlg)
     {

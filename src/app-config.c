@@ -535,6 +535,7 @@ static void fm_app_config_init(FmAppConfig *cfg)
     cfg->close_on_unmount = TRUE;
     cfg->maximized = FALSE;
     cfg->pathbar_mode_buttons = FALSE;
+    cfg->desktop_section.prefs_app = NULL;
 }
 
 
@@ -650,6 +651,8 @@ void fm_app_config_load_desktop_config(GKeyFile *kf, const char *group, FmDeskto
     fm_key_file_get_bool(kf, group, "show_trash", &cfg->show_trash);
     fm_key_file_get_bool(kf, group, "show_mounts", &cfg->show_mounts);
 #endif
+    g_free(cfg->prefs_app);
+    cfg->prefs_app = g_key_file_get_string(kf, group, "prefs_app", NULL);
 }
 
 void fm_app_config_load_from_key_file(FmAppConfig* cfg, GKeyFile* kf)
@@ -1070,6 +1073,7 @@ void fm_app_config_save_desktop_config(GString *buf, const char *group, FmDeskto
     g_string_append_printf(buf, "show_trash=%d\n", cfg->show_trash);
     g_string_append_printf(buf, "show_mounts=%d\n", cfg->show_mounts);
 #endif
+    if (cfg->prefs_app) g_string_append_printf(buf, "prefs_app=%s", cfg->prefs_app);
 }
 
 static void _save_choice(gpointer key, gpointer val, gpointer buf)
