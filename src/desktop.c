@@ -5683,6 +5683,11 @@ void fm_desktop_reconfigure (GtkAction *act, FmDesktop *desktop)
     // reload the config file
 	load_config (desktop);  
 	
+    // reload the font used for icon names
+    if (fm_config->icon_font) g_free (fm_config->icon_font);
+    fm_config->icon_font = g_strdup (desktop->conf.desktop_font);
+    fm_config_save (fm_config, NULL);
+
 	// update the display font
 	PangoFontDescription *font_desc = pango_font_description_from_string(desktop->conf.desktop_font);
     if(font_desc)
