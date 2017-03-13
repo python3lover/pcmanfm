@@ -73,6 +73,7 @@ typedef struct
     char** wallpapers;
     int wallpapers_configured;
     gboolean wallpaper_common;
+    gboolean wallpaper_random;
     gint configured : 1;
     gint changed : 1;
     GdkColor desktop_bg;

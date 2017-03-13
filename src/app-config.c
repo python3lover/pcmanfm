@@ -516,6 +516,7 @@ static void fm_app_config_init(FmAppConfig *cfg)
     cfg->desktop_section.desktop_sort_by = COL_FILE_MTIME;
 #endif
     cfg->desktop_section.wallpaper_common = TRUE;
+    cfg->desktop_section.wallpaper_random = FALSE;
 #if FM_CHECK_VERSION(1, 2, 0)
     cfg->desktop_section.show_documents = FALSE;
     cfg->desktop_section.show_trash = TRUE;
@@ -565,6 +566,7 @@ void fm_app_config_load_desktop_config(GKeyFile *kf, const char *group, FmDeskto
     cfg->desktop_sort_by = COL_FILE_MTIME;
 #endif
     cfg->wallpaper_common = TRUE;
+    cfg->wallpaper_random = FALSE;
 #if FM_CHECK_VERSION(1, 2, 0)
     cfg->show_trash = TRUE;
 #endif
@@ -605,6 +607,7 @@ void fm_app_config_load_desktop_config(GKeyFile *kf, const char *group, FmDeskto
             cfg->wallpapers[i] = tmp;
         }
     }
+    fm_key_file_get_bool(kf, group, "wallpaper_random", &cfg->wallpaper_random);
     fm_key_file_get_bool(kf, group, "wallpaper_common", &cfg->wallpaper_common);
     if (cfg->wallpaper_common)
     {
@@ -1039,6 +1042,7 @@ void fm_app_config_save_desktop_config(GString *buf, const char *group, FmDeskto
                                 "wallpaper_mode=%s\n", group,
                            fm_app_wallpaper_get_mode_name(cfg->wallpaper_mode));
     g_string_append_printf(buf, "wallpaper_common=%d\n", cfg->wallpaper_common);
+    g_string_append_printf(buf, "wallpaper_random=%d\n", cfg->wallpaper_random);
     if (cfg->wallpapers && cfg->wallpapers_configured > 0)
     {
         int i;

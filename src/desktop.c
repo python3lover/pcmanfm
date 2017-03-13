@@ -39,6 +39,9 @@
 
 #include <cairo-xlib.h>
 
+#include <dirent.h>
+#include <stdlib.h>
+
 #include "pref.h"
 #include "main-win.h"
 
@@ -2184,6 +2187,39 @@ static void update_background(FmDesktop* desktop, int is_it)
     if(desktop->conf.wallpaper_mode != FM_WP_COLOR && wallpaper && *wallpaper)
     {
         struct stat st; /* for mtime */
+
+        if (desktop->conf.wallpaper_random)
+        {
+            DIR *dirp;
+            struct dirent *dp;
+            time_t t;
+            int count = 0;
+
+            dirp = opendir (g_path_get_dirname (wallpaper));
+
+            // count the jpgs in the desktop folder
+            while ((dp = readdir (dirp)) != NULL)
+            {
+                if (!strcmp ("jpg", dp->d_name + strlen (dp->d_name) - 3)) count++;
+            }
+            rewinddir (dirp);
+
+            // select a random jpeg
+            srand ((unsigned) time (&t));
+            count = rand () % count;
+            do
+            {
+                do
+                {
+                    dp = readdir (dirp);
+                }
+                while (strcmp ("jpg", dp->d_name + strlen (dp->d_name) - 3));
+            }
+            while (count--);
+
+            wallpaper = g_build_filename (g_path_get_dirname (wallpaper), dp->d_name, NULL);
+            closedir (dirp);
+        }
 
         /* bug #3613571 - replacing the file will not affect the desktop
            we will call stat on each desktop change but it's inevitable */
@@ -5681,15 +5717,15 @@ void fm_desktop_reconfigure (GtkAction *act, FmDesktop *desktop)
         return;
         
     // reload the config file
-	load_config (desktop);  
-	
+    load_config (desktop);
+
     // reload the font used for icon names
     if (fm_config->icon_font) g_free (fm_config->icon_font);
     fm_config->icon_font = g_strdup (desktop->conf.desktop_font);
     fm_config_save (fm_config, NULL);
 
-	// update the display font
-	PangoFontDescription *font_desc = pango_font_description_from_string(desktop->conf.desktop_font);
+    // update the display font
+    PangoFontDescription *font_desc = pango_font_description_from_string(desktop->conf.desktop_font);
     if(font_desc)
     {
         PangoContext* pc = gtk_widget_get_pango_context((GtkWidget*)desktop);
@@ -5703,35 +5739,35 @@ void fm_desktop_reconfigure (GtkAction *act, FmDesktop *desktop)
     // update icons
     if (desktop->model)
     {
-		if (documents && documents->fi)
-		{
-			if (desktop->conf.show_documents)
-				fm_folder_model_extra_file_add(desktop->model, documents->fi, FM_FOLDER_MODEL_ITEMPOS_PRE);
-			else
-				fm_folder_model_extra_file_remove(desktop->model, documents->fi);
-		}
+        if (documents && documents->fi)
+        {
+            if (desktop->conf.show_documents)
+                fm_folder_model_extra_file_add(desktop->model, documents->fi, FM_FOLDER_MODEL_ITEMPOS_PRE);
+            else
+                fm_folder_model_extra_file_remove(desktop->model, documents->fi);
+        }
 
-		if (trash_can && trash_can->fi)
-		{
-			if (desktop->conf.show_trash)
-				fm_folder_model_extra_file_add(desktop->model, trash_can->fi, FM_FOLDER_MODEL_ITEMPOS_PRE);
-			else
-				fm_folder_model_extra_file_remove(desktop->model, trash_can->fi);
-		}
+        if (trash_can && trash_can->fi)
+        {
+            if (desktop->conf.show_trash)
+                fm_folder_model_extra_file_add(desktop->model, trash_can->fi, FM_FOLDER_MODEL_ITEMPOS_PRE);
+            else
+                fm_folder_model_extra_file_remove(desktop->model, trash_can->fi);
+        }
 
-		GSList *msl;
-		for (msl = mounts; msl; msl = msl->next)
-		{
-			FmDesktopExtraItem *mount = msl->data;
-			if (desktop->conf.show_mounts)
-				fm_folder_model_extra_file_add(desktop->model, mount->fi, FM_FOLDER_MODEL_ITEMPOS_POST);
-			else
-				fm_folder_model_extra_file_remove(desktop->model, mount->fi);
-		}
-	}
+        GSList *msl;
+        for (msl = mounts; msl; msl = msl->next)
+        {
+            FmDesktopExtraItem *mount = msl->data;
+            if (desktop->conf.show_mounts)
+                fm_folder_model_extra_file_add(desktop->model, mount->fi, FM_FOLDER_MODEL_ITEMPOS_POST);
+            else
+                fm_folder_model_extra_file_remove(desktop->model, mount->fi);
+        }
+    }
 
     // update the desktop background
-	update_background(desktop, 0);
+    update_background(desktop, 0);
 }
 
 
