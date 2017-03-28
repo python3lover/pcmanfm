@@ -2087,6 +2087,39 @@ static void _clear_bg_cache(FmDesktop *self)
     }
 }
 
+static void randomise_background (FmDesktop* desktop)
+{
+    DIR *dirp;
+    struct dirent *dp;
+    time_t t;
+    int count = 0;
+
+    dirp = opendir (g_path_get_dirname (desktop->conf.wallpaper));
+
+    // count the jpgs in the desktop folder
+    while ((dp = readdir (dirp)) != NULL)
+    {
+        if (!strcmp ("jpg", dp->d_name + strlen (dp->d_name) - 3)) count++;
+    }
+    rewinddir (dirp);
+
+    // select a random jpeg
+    srand ((unsigned) time (&t));
+    count = rand () % count;
+    do
+    {
+        do
+        {
+            dp = readdir (dirp);
+        }
+        while (strcmp ("jpg", dp->d_name + strlen (dp->d_name) - 3));
+    }
+    while (count--);
+
+    desktop->conf.rand_wallpaper = g_strdup (g_build_filename (g_path_get_dirname (desktop->conf.wallpaper), dp->d_name, NULL));
+    closedir (dirp);
+}
+
 static void update_background(FmDesktop* desktop, int is_it)
 {
     GtkWidget* widget = (GtkWidget*)desktop;
@@ -2188,37 +2221,9 @@ static void update_background(FmDesktop* desktop, int is_it)
     {
         struct stat st; /* for mtime */
 
-        if (desktop->conf.wallpaper_random)
+        if (desktop->conf.wallpaper_random && desktop->conf.rand_wallpaper)
         {
-            DIR *dirp;
-            struct dirent *dp;
-            time_t t;
-            int count = 0;
-
-            dirp = opendir (g_path_get_dirname (wallpaper));
-
-            // count the jpgs in the desktop folder
-            while ((dp = readdir (dirp)) != NULL)
-            {
-                if (!strcmp ("jpg", dp->d_name + strlen (dp->d_name) - 3)) count++;
-            }
-            rewinddir (dirp);
-
-            // select a random jpeg
-            srand ((unsigned) time (&t));
-            count = rand () % count;
-            do
-            {
-                do
-                {
-                    dp = readdir (dirp);
-                }
-                while (strcmp ("jpg", dp->d_name + strlen (dp->d_name) - 3));
-            }
-            while (count--);
-
-            wallpaper = g_build_filename (g_path_get_dirname (wallpaper), dp->d_name, NULL);
-            closedir (dirp);
+            wallpaper = desktop->conf.rand_wallpaper;
         }
 
         /* bug #3613571 - replacing the file will not affect the desktop
@@ -4273,6 +4278,7 @@ static void on_realize(GtkWidget* w)
     /* copy found configuration to use by next monitor */
     else if (!app_config->desktop_section.configured)
         copy_desktop_config(&app_config->desktop_section, &self->conf);
+    randomise_background (self);
     update_background(self, -1);
     /* set a proper desktop font if needed */
     if (self->conf.desktop_font == NULL)

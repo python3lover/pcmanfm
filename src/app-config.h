@@ -70,6 +70,7 @@ typedef struct
 {
     FmWallpaperMode wallpaper_mode;
     char* wallpaper;
+    char* rand_wallpaper;
     char** wallpapers;
     int wallpapers_configured;
     gboolean wallpaper_common;
