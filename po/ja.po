@@ -31,7 +31,7 @@ msgstr "Hironao Komatsu <hironao@users.sourceforge.net>"
 #: ../data/ui/desktop-pref.glade.h:1 ../src/desktop-ui.c:34
 #: ../data/pcmanfm-desktop-pref.desktop.in.h:1
 msgid "Desktop Preferences"
-msgstr "デスクトップの設定"
+msgstr "デスクトップ設定"
 
 #: ../data/ui/desktop-pref.glade.h:2
 msgid "<b>Background</b>"
@@ -47,7 +47,7 @@ msgstr "壁紙(_W):"
 
 #: ../data/ui/desktop-pref.glade.h:5
 msgid "Please select an image file"
-msgstr "画像ファイルを選んでください"
+msgstr "画像を選んでください"
 
 #: ../data/ui/desktop-pref.glade.h:6
 msgid "_Use the same wallpaper on all desktops"
@@ -79,23 +79,23 @@ msgstr "外観(_A)"
 
 #: ../data/ui/desktop-pref.glade.h:13
 msgid "<b>Show desktop icons</b>"
-msgstr "<b>デスクトップアイコンを表示する</b>"
+msgstr "<b>デスクトップアイコンを表示</b>"
 
 #: ../data/ui/desktop-pref.glade.h:14
 msgid "_Show \"Documents\" folder on the desktop"
-msgstr "デスクトップに \"ドキュメント\" のフォルダを表示する(_S)"
+msgstr "デスクトップに \"ドキュメント\" のフォルダを表示(_S)"
 
 #: ../data/ui/desktop-pref.glade.h:15
 msgid "Sho_w \"Devices\" folder on the desktop"
-msgstr "デスクトップに \"デバイス\" のフォルダを表示する(_W)"
+msgstr "デスクトップに \"デバイス\" のフォルダを表示(_W)"
 
 #: ../data/ui/desktop-pref.glade.h:16
 msgid "Show \"_Trash Can\" folder on the desktop"
-msgstr "デスクトップに \"ゴミ箱\" のフォルダを表示する(_T)"
+msgstr "デスクトップに \"ゴミ箱\" のフォルダを表示(_T)"
 
 #: ../data/ui/desktop-pref.glade.h:17
 msgid "S_how connected volumes on the desktop"
-msgstr "接続されたボリュームをデスクトップに表示する(_H)"
+msgstr "接続されたボリュームをデスクトップに表示(_H)"
 
 #: ../data/ui/desktop-pref.glade.h:18
 msgid "_Desktop Icons"
@@ -103,7 +103,7 @@ msgstr "デスクトップアイコン(_D)"
 
 #: ../data/ui/desktop-pref.glade.h:19
 msgid "_Show menus provided by window managers when desktop is clicked"
-msgstr "デスクトップをクリックしたときウィンドウマネージャのメニューを表示する(_S)"
+msgstr "デスクトップをクリックしたときウィンドウマネージャのメニューを表示(_S)"
 
 #: ../data/ui/desktop-pref.glade.h:20
 msgid "_Use desktop as a folder (show icons on it) by path:"
@@ -129,7 +129,7 @@ msgstr "デスクトップからフォルダを開く時は新規ウィンドウ
 
 #: ../data/ui/desktop-pref.glade.h:25
 msgid "Ad_vanced"
-msgstr "高度な設定(_V)"
+msgstr "アドバンスド設定(_V)"
 
 #: ../data/ui/desktop-pref.glade.h:26
 msgid "Fill with background color only"
